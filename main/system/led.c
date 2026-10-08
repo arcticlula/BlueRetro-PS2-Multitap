@@ -12,11 +12,7 @@
 #include "adapter/config.h"
 #include "led.h"
 
-#ifdef CONFIG_BLUERETRO_SYSTEM_SEA_BOARD
-#define ERR_LED_PIN 32
-#else
 #define ERR_LED_PIN 17
-#endif
 #define PICO_ERR_LED_PIN 20
 
 /* LED flags */

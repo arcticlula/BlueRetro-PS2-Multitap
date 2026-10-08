@@ -65,33 +65,12 @@ enum {
     BT_SUBTYPE_MAX,
 };
 
-/* Wired system ID */
+/* Wired system ID, values are fixed to stay compatible with BlueRetro config & web UI */
 enum {
     WIRED_AUTO = 0,
-    PARALLEL_1P,
-    PARALLEL_2P,
-    NES,
-    PCE,
-    GENESIS,
-    SNES,
-    CDI,
-    CD32,
-    REAL_3DO,
-    JAGUAR,
-    PSX,
-    SATURN,
-    PCFX,
-    JVS,
-    N64,
-    DC,
-    PS2,
-    GC,
-    WII_EXT,
-    VBOY,
-    PARALLEL_1P_OD,
-    PARALLEL_2P_OD,
-    SEA_BOARD,
-    WIRED_MAX,
+    PSX = 11,
+    PS2 = 17,
+    WIRED_MAX = 24,
 };
 
 /* Report type ID */

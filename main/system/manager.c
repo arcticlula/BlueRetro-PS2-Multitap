@@ -37,15 +37,10 @@
 #define POWER_OFF_PIN 16
 #define POWER_SENSE_PIN 39
 
-#define POWER_OFF_ALT_PIN 12
-
 #define SENSE_P1_PIN 35
 #define SENSE_P2_PIN 36
 #define SENSE_P3_PIN 32
 #define SENSE_P4_PIN 33
-
-#define SENSE_P1_ALT_PIN 15
-#define SENSE_P2_ALT_PIN 34
 
 #define LED_P1_PIN 2
 #define LED_P2_PIN 4
@@ -390,10 +385,7 @@ static void boot_btn_hdl(void) {
             vTaskDelay(10 / portTICK_PERIOD_MS);
         }
 
-#ifndef CONFIG_BLUERETRO_SYSTEM_UNIVERSAL
-        if (hw_config.external_adapter)
-#endif
-        {
+        if (hw_config.external_adapter) {
             state++;
         }
 
@@ -508,16 +500,12 @@ static void sys_mgr_power_off(void) {
 }
 
 static int32_t sys_mgr_get_power(void) {
-#ifdef CONFIG_BLUERETRO_SYSTEM_UNIVERSAL
-    return 1;
-#else
     if (hw_config.external_adapter) {
         return 1;
     }
     else {
         return gpio_get_level(POWER_SENSE_PIN);
     }
-#endif
 }
 
 static int32_t sys_mgr_get_boot_btn(void) {
@@ -622,48 +610,7 @@ void sys_mgr_init(uint32_t package) {
         printf("# Failed to create cmd_q ring buffer\n");
     }
 
-    switch (wired_adapter.system_id) {
-        case GENESIS:
-        case SATURN:
-            hw_config.port_cnt = 2;
-#ifdef CONFIG_BLUERETRO_HW2
-            sense_list[0] = SENSE_P1_ALT_PIN;
-            sense_list[1] = SENSE_P2_ALT_PIN;
-            power_off_pin = POWER_OFF_ALT_PIN;
-#endif
-            break;
-        case JAGUAR:
-            hw_config.port_cnt = 1;
-#ifdef CONFIG_BLUERETRO_HW2
-            sense_list[0] = SENSE_P1_ALT_PIN;
-            sense_list[1] = SENSE_P2_ALT_PIN;
-#endif
-            break;
-        case WII_EXT:
-            hw_config.port_cnt = 2;
-            hw_config.power_pin_is_hold = 1;
-            hw_config.ports_sense_input_polarity = 1;
-            hw_config.power_pin_polarity = 1;
-            hw_config.ports_sense_p3_p4_as_output = 1;
-            break;
-        case N64:
-        case DC:
-        case GC:
-            hw_config.port_cnt = 4;
-            break;
-        case PARALLEL_1P:
-        case PCE:
-        case REAL_3DO:
-        case JVS:
-        case VBOY:
-        case PARALLEL_1P_OD:
-        case SEA_BOARD:
-            hw_config.port_cnt = 1;
-            break;
-        default:
-            hw_config.port_cnt = 2;
-            break;
-    }
+    hw_config.port_cnt = 2;
 
 #ifdef CONFIG_BLUERETRO_BT_H4_TRACE
     hw_config.port_cnt = 1;
@@ -705,12 +652,6 @@ void sys_mgr_init(uint32_t package) {
 
     io_conf.mode = GPIO_MODE_OUTPUT;
     for (uint32_t i = 0; i < led_init_cnt; i++) {
-#ifdef CONFIG_BLUERETRO_HW2
-        /* Skip pin 15 if alt sense pin are used */
-        if (sense_list[0] == led_list[i]) {
-            continue;
-        }
-#endif
         gpio_set_level(led_list[i], 0);
         io_conf.pin_bit_mask = 1ULL << led_list[i];
         gpio_config(&io_conf);

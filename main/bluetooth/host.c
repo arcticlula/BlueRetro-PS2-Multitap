@@ -29,7 +29,6 @@
 #include "adapter/config.h"
 #include "adapter/gameid.h"
 #include "adapter/memory_card.h"
-#include "adapter/wired/wired.h"
 #include "adapter/hid_parser.h"
 #include "bluetooth/hidp/ps.h"
 
@@ -294,9 +293,6 @@ static void bt_host_task(void *param) {
                 }
             }
         }
-
-        /* Update turbo mask for parallel system */
-        wired_para_turbo_mask_hdlr();
 
 #ifdef CONFIG_BLUERETRO_ADAPTER_RUMBLE_DBG
     adapter_toggle_fb(0, 150000,
